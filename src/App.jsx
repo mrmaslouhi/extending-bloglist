@@ -1,137 +1,132 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import Notification from './components/Notification'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import { useState, useEffect } from "react";
+import Blog from "./components/Blog";
+import Notification from "./components/Notification";
+import blogService from "./services/blogs";
+import loginService from "./services/login";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [message, setMessage] = useState(null)
-  const [messageType, setMessageType] = useState(null)
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
-  const [author, setAuthor] = useState('')
+  const [blogs, setBlogs] = useState([]);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState(null);
+  const [title, setTitle] = useState("");
+  const [url, setUrl] = useState("");
+  const [author, setAuthor] = useState("");
 
-  const [user, setUser] = useState(null)
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogger')
+    blogService.getAll().then((blogs) => setBlogs(blogs));
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogger");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      console.log(user)
-      blogService.setToken(user.token)
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      console.log(user);
+      blogService.setToken(user.token);
     }
-  }, [])
+  }, []);
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
         username
         <input
-          type='text'
+          type="text"
           value={username}
-          name='Username'
+          name="Username"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
         password
         <input
-          type='password'
+          type="password"
           value={password}
-          name='Password'
+          name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type='submit'>login</button>
+      <button type="submit">login</button>
     </form>
-  )
+  );
 
   const handleAddBlog = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     try {
       const blog = await blogService.post({
-        title, url, author
-      })
-      setMessage(`added blog ${blog.title} by ${blog.author}`)
+        title,
+        url,
+        author,
+      });
+      setMessage(`added blog ${blog.title} by ${blog.author}`);
       setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-      setMessageType('success')
-      setAuthor('')
-      setUrl('')
-      setTitle('')
-
-    } catch(error) {
-      setMessage('Error while making blog')
+        setMessage(null);
+      }, 5000);
+      setMessageType("success");
+      setAuthor("");
+      setUrl("");
+      setTitle("");
+    } catch (error) {
+      setMessage("Error while making blog");
       setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-      setMessageType('error')
+        setMessage(null);
+      }, 5000);
+      setMessageType("error");
     }
-  }
-  
+  };
+
   const blogForm = () => (
     <form onSubmit={handleAddBlog}>
       <div>
         title
         <input
-        onChange={({ target }) => setTitle(target.value)}
-        value={title}
+          onChange={({ target }) => setTitle(target.value)}
+          value={title}
         />
         author
         <input
-        onChange={({ target }) => setAuthor(target.value)}
-        value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+          value={author}
         />
         url
-        <input
-        onChange={({ target }) => setUrl(target.value)}
-        value={url}
-        />
-        <button type='submit'>post blog</button>
+        <input onChange={({ target }) => setUrl(target.value)} value={url} />
+        <button type="submit">post blog</button>
       </div>
     </form>
-  )
+  );
 
   const handleLogin = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     try {
       const user = await loginService.login({
-        username, password
-      })
-      window.localStorage.setItem(
-        'loggedBlogger', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
+        username,
+        password,
+      });
+      window.localStorage.setItem("loggedBlogger", JSON.stringify(user));
+      blogService.setToken(user.token);
+      setUser(user);
+      setUsername("");
+      setPassword("");
     } catch (exception) {
-      setMessage('Wrong credentials')
-      setMessageType('error')
+      setMessage("Wrong credentials");
+      setMessageType("error");
       setTimeout(() => {
-        setMessage(null)
-        setMessageType(null)
-      }, 5000)
+        setMessage(null);
+        setMessageType(null);
+      }, 5000);
     }
-  }
+  };
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogger')
-    setUser(null)
-  }
+    window.localStorage.removeItem("loggedBlogger");
+    setUser(null);
+  };
 
   if (user === null) {
     return (
@@ -140,7 +135,7 @@ const App = () => {
         <Notification message={message} messageType={messageType} />
         {loginForm()}
       </div>
-    )
+    );
   }
 
   return (
@@ -150,12 +145,11 @@ const App = () => {
       {user.username} logged in
       <button onClick={handleLogout}>logout</button>
       {blogForm()}
-      {blogs.map(blog =>
+      {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
-      )}
-      
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
