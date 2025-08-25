@@ -3,18 +3,20 @@ import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import { setNotification, setMessage } from "./reducers/notificationReducer";
+import { useDispatch } from "react-redux";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(null);
-  const [messageType, setMessageType] = useState(null);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [author, setAuthor] = useState("");
 
   const [user, setUser] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -25,7 +27,6 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      console.log(user);
       blogService.setToken(user.token);
     }
   }, []);
@@ -63,20 +64,18 @@ const App = () => {
         url,
         author,
       });
-      setMessage(`added blog ${blog.title} by ${blog.author}`);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-      setMessageType("success");
+      dispatch(
+        setNotification(
+          `added blog ${blog.title} by ${blog.author}`,
+          "success",
+          5,
+        ),
+      );
       setAuthor("");
       setUrl("");
       setTitle("");
     } catch (error) {
-      setMessage("Error while making blog");
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-      setMessageType("error");
+      dispatch(setNotification("error while adding this blog", "error", 5));
     }
   };
 
@@ -114,17 +113,13 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setMessage("Wrong credentials");
-      setMessageType("error");
-      setTimeout(() => {
-        setMessage(null);
-        setMessageType(null);
-      }, 5000);
+      dispatch(setNotification("wrong credentials", "error", 5));
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogger");
+    dispatch(setNotification(null, "success", 0));
     setUser(null);
   };
 
@@ -132,7 +127,7 @@ const App = () => {
     return (
       <div>
         <h1>login to the app</h1>
-        <Notification message={message} messageType={messageType} />
+        <Notification />
         {loginForm()}
       </div>
     );
@@ -141,7 +136,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} messageType={messageType} />
+      <Notification />
       {user.username} logged in
       <button onClick={handleLogout}>logout</button>
       {blogForm()}
