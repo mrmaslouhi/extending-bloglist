@@ -22,8 +22,19 @@ const post = async (newObject) => {
   return response.data;
 };
 
-const remove = (pi) => {
-  console.log(pi);
+const incrementLikes = async (id) => {
+  const blogs = await getAll();
+  const likedBlog = blogs.find((blog) => blog.id === id);
+  likedBlog.likes += 1;
+  const response = await axios.put(`${baseUrl}/${id}`, likedBlog);
+  return response.data;
 };
 
-export default { getAll, post, remove, setToken };
+const remove = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  await axios.delete(`${baseUrl}/${id}`, config);
+};
+
+export default { getAll, post, remove, setToken, incrementLikes };

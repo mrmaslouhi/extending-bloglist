@@ -4,7 +4,12 @@ import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { setNotification } from "./reducers/notificationReducer";
-import { addBlog, initializeBlogs } from "./reducers/blogReducer";
+import {
+  addBlog,
+  incrementLikes,
+  initializeBlogs,
+  removeBlog,
+} from "./reducers/blogReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 const App = () => {
@@ -136,7 +141,13 @@ const App = () => {
       {blogs.map((blog) => (
         <div key={blog.id}>
           <Blog blog={blog} />
-          <button>like</button>
+          <button onClick={() => dispatch(incrementLikes(blog.id))}>
+            like
+          </button>
+          <p>likes: {blog.likes}</p>
+          <button onClick={() => dispatch(removeBlog(blog.id))}>
+            remove blog
+          </button>
         </div>
       ))}
     </div>
