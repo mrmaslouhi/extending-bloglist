@@ -3,11 +3,12 @@ import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import { setNotification, setMessage } from "./reducers/notificationReducer";
-import { useDispatch } from "react-redux";
+import { setNotification } from "./reducers/notificationReducer";
+import { addBlog, initializeBlogs } from "./reducers/blogReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector((state) => state.blogs);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [title, setTitle] = useState("");
@@ -19,7 +20,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    dispatch(initializeBlogs());
   }, []);
 
   useEffect(() => {
@@ -59,17 +60,9 @@ const App = () => {
     event.preventDefault();
 
     try {
-      const blog = await blogService.post({
-        title,
-        url,
-        author,
-      });
+      dispatch(addBlog(title, url, author));
       dispatch(
-        setNotification(
-          `added blog ${blog.title} by ${blog.author}`,
-          "success",
-          5,
-        ),
+        setNotification(`added blog ${title} by ${author}`, "success", 5),
       );
       setAuthor("");
       setUrl("");
@@ -141,7 +134,10 @@ const App = () => {
       <button onClick={handleLogout}>logout</button>
       {blogForm()}
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <div key={blog.id}>
+          <Blog blog={blog} />
+          <button>like</button>
+        </div>
       ))}
     </div>
   );

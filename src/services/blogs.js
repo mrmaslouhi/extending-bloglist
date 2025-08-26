@@ -23,7 +23,7 @@ const post = async (newObject) => {
 };
 
 const remove = (pi) => {
-  console.log("");
+  console.log(pi);
 };
 
 export default { getAll, post, remove, setToken };
