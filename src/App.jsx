@@ -9,17 +9,21 @@ import {
   incrementLikes,
   initializeBlogs,
   removeBlog,
-} from "./reducers/blogReducer";
+} from "./reducers/blogsReducer";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  setTitle,
+  setUrl,
+  setAuthor,
+  clearAllInfo,
+} from "./reducers/blogInfoReducer";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
+  const { title, url, author } = useSelector((state) => state.blogInfo);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [author, setAuthor] = useState("");
-
   const [user, setUser] = useState(null);
 
   const dispatch = useDispatch();
@@ -65,13 +69,18 @@ const App = () => {
     event.preventDefault();
 
     try {
+      if (!title || !url) {
+        throw new Error("missing title or id");
+      }
       dispatch(addBlog(title, url, author));
       dispatch(
-        setNotification(`added blog ${title} by ${author}`, "success", 5),
+        setNotification(
+          !author ? `added ${title}` : `added blog ${title} by ${author}`,
+          "success",
+          5,
+        ),
       );
-      setAuthor("");
-      setUrl("");
-      setTitle("");
+      dispatch(clearAllInfo());
     } catch (error) {
       dispatch(setNotification("error while adding this blog", "error", 5));
     }
@@ -82,16 +91,19 @@ const App = () => {
       <div>
         title
         <input
-          onChange={({ target }) => setTitle(target.value)}
+          onChange={({ target }) => dispatch(setTitle(target.value))}
           value={title}
         />
         author
         <input
-          onChange={({ target }) => setAuthor(target.value)}
+          onChange={({ target }) => dispatch(setAuthor(target.value))}
           value={author}
         />
         url
-        <input onChange={({ target }) => setUrl(target.value)} value={url} />
+        <input
+          onChange={({ target }) => dispatch(setUrl(target.value))}
+          value={url}
+        />
         <button type="submit">post blog</button>
       </div>
     </form>

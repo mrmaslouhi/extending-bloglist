@@ -1,7 +1,7 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
 
-const blogSlice = createSlice({
+const blogsSlice = createSlice({
   name: "blogs",
   initialState: [],
   reducers: {
@@ -50,5 +50,5 @@ export const removeBlog = (id) => {
   };
 };
 
-export const { setBlogs, appendBlog } = blogSlice.actions;
-export default blogSlice.reducer;
+export const { setBlogs, appendBlog } = blogsSlice.actions;
+export default blogsSlice.reducer;
