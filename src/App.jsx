@@ -17,13 +17,17 @@ import {
   setAuthor,
   clearAllInfo,
 } from "./reducers/blogInfoReducer";
+import {
+  setUsername,
+  setPassword,
+  clearAllUserInfo,
+} from "./reducers/userInfoReducer";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
   const { title, url, author } = useSelector((state) => state.blogInfo);
+  const { username, password } = useSelector((state) => state.userInfo);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
   const dispatch = useDispatch();
@@ -49,7 +53,7 @@ const App = () => {
           type="text"
           value={username}
           name="Username"
-          onChange={({ target }) => setUsername(target.value)}
+          onChange={({ target }) => dispatch(setUsername(target.value))}
         />
       </div>
       <div>
@@ -58,7 +62,7 @@ const App = () => {
           type="password"
           value={password}
           name="Password"
-          onChange={({ target }) => setPassword(target.value)}
+          onChange={({ target }) => dispatch(setPassword(target.value))}
         />
       </div>
       <button type="submit">login</button>
@@ -120,8 +124,7 @@ const App = () => {
       window.localStorage.setItem("loggedBlogger", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      setUsername("");
-      setPassword("");
+      dispatch(clearAllUserInfo());
     } catch (exception) {
       dispatch(setNotification("wrong credentials", "error", 5));
     }
