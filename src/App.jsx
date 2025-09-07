@@ -3,10 +3,12 @@ import Blogs from "./components/Blogs";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
+import Users from "./components/Users";
 import BlogForm from "./components/BlogForm";
 import LoginStatus from "./components/LoginStatus";
 import { initializeBlogs } from "./reducers/blogsReducer";
 import { useDispatch } from "react-redux";
+import { Routes, Route } from "react-router-dom";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -40,8 +42,18 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <LoginStatus user={user} setUser={setUser} />
-      {<BlogForm />}
-      <Blogs />
+      <Routes>
+        <Route path="/users" element={<Users />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <BlogForm />
+              <Blogs />
+            </>
+          }
+        />
+      </Routes>
     </div>
   );
 };
