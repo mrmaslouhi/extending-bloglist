@@ -3,6 +3,7 @@ import notificationReducer from "./reducers/notificationReducer";
 import blogsReducer from "./reducers/blogsReducer";
 import blogInfoReducer from "./reducers/blogInfoReducer";
 import userInfoReducer from "./reducers/userInfoReducer";
+import usersReducer from "./reducers/usersReducer";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     blogs: blogsReducer,
     blogInfo: blogInfoReducer,
     userInfo: userInfoReducer,
+    users: usersReducer,
   },
 });
 

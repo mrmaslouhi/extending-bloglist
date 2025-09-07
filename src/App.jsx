@@ -4,9 +4,11 @@ import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
 import Users from "./components/Users";
+import User from "./components/User";
 import BlogForm from "./components/BlogForm";
 import LoginStatus from "./components/LoginStatus";
 import { initializeBlogs } from "./reducers/blogsReducer";
+import { initializeUsers } from "./reducers/usersReducer";
 import { useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
 
@@ -16,6 +18,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs());
+  }, []);
+
+  useEffect(() => {
+    dispatch(initializeUsers());
   }, []);
 
   useEffect(() => {
@@ -43,7 +49,6 @@ const App = () => {
       <Notification />
       <LoginStatus user={user} setUser={setUser} />
       <Routes>
-        <Route path="/users" element={<Users />} />
         <Route
           path="/"
           element={
@@ -53,6 +58,8 @@ const App = () => {
             </>
           }
         />
+        <Route path="/users" element={<Users />} />
+        <Route path="/user/:id" element={<User />} />
       </Routes>
     </div>
   );
