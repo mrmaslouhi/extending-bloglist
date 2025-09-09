@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { incrementLikes, removeBlog } from "../reducers/blogsReducer";
+import { Link } from "react-router-dom";
 
 const Blogs = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -7,7 +8,9 @@ const Blogs = () => {
 
   return blogs.map((blog) => (
     <div key={blog.id}>
-      {blog.title} {blog.author}
+      <Link to={`/blogs/${blog.id}`}>
+        {blog.title} {blog.author}
+      </Link>
       <button onClick={() => dispatch(incrementLikes(blog.id))}>like</button>
       <p>likes: {blog.likes}</p>
       <button onClick={() => dispatch(removeBlog(blog.id))}>remove blog</button>
