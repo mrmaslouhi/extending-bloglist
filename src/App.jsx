@@ -7,6 +7,7 @@ import blogService from "./services/blogs";
 import Users from "./components/Users";
 import User from "./components/User";
 import BlogForm from "./components/BlogForm";
+import Navigation from "./components/Navigation";
 import LoginStatus from "./components/LoginStatus";
 import { initializeBlogs } from "./reducers/blogsReducer";
 import { initializeUsers } from "./reducers/usersReducer";
@@ -46,9 +47,11 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
+      <Navigation>
+        <LoginStatus user={user} setUser={setUser} />
+      </Navigation>
+      <h2>blog app</h2>
       <Notification />
-      <LoginStatus user={user} setUser={setUser} />
       <Routes>
         <Route
           path="/"
