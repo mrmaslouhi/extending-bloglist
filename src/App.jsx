@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Blogs from "./components/Blogs";
+import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
@@ -60,6 +61,7 @@ const App = () => {
         />
         <Route path="/users" element={<Users />} />
         <Route path="/user/:id" element={<User />} />
+        <Route path="/blogs/:id" element={<Blog />} />
       </Routes>
     </div>
   );
